@@ -1,47 +1,51 @@
-﻿using System;
+﻿#nullable enable
 
-namespace RGB.NET.Core;
+using System;
 
-/// <summary>
-/// Represents a generic update trigger. 
-/// </summary>
-public abstract class AbstractUpdateTrigger : AbstractBindable, IUpdateTrigger
+namespace RGB.NET.Core
 {
-    #region Properties & Fields
-
-    /// <inheritdoc />
-    public abstract double LastUpdateTime { get; protected set; }
-
-    #endregion
-
-    #region Events
-
-    /// <inheritdoc />
-    public event EventHandler<CustomUpdateData>? Starting;
-    /// <inheritdoc />
-    public event EventHandler<CustomUpdateData>? Update;
-
-    #endregion
-
-    #region Methods
 
     /// <summary>
-    /// Invokes the <see cref="Starting"/>-event.
+    /// Represents a generic update trigger. 
     /// </summary>
-    /// <param name="updateData">Optional custom-data passed to the subscribers of the <see cref="Starting"/>.event.</param>
-    protected virtual void OnStartup(CustomUpdateData? updateData = null) => Starting?.Invoke(this, updateData ?? new CustomUpdateData());
+    public abstract class AbstractUpdateTrigger : AbstractBindable, IUpdateTrigger
+    {
+        #region Properties & Fields
 
-    /// <summary>
-    /// Invokes the <see cref="Update"/>-event.
-    /// </summary>
-    /// <param name="updateData">Optional custom-data passed to the subscribers of the <see cref="Update"/>.event.</param>
-    protected virtual void OnUpdate(CustomUpdateData? updateData = null) => Update?.Invoke(this, updateData ?? new CustomUpdateData());
+        /// <inheritdoc />
+        public abstract double LastUpdateTime { get; protected set; }
 
-    /// <inheritdoc />
-    public abstract void Start();
+        #endregion
 
-    /// <inheritdoc />
-    public abstract void Dispose();
+        #region Events
 
-    #endregion
+        /// <inheritdoc />
+        public event EventHandler<CustomUpdateData>? Starting;
+        /// <inheritdoc />
+        public event EventHandler<CustomUpdateData>? Update;
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Invokes the <see cref="Starting"/>-event.
+        /// </summary>
+        /// <param name="updateData">Optional custom-data passed to the subscribers of the <see cref="Starting"/>.event.</param>
+        protected virtual void OnStartup(CustomUpdateData? updateData = null) => Starting?.Invoke(this, updateData ?? new CustomUpdateData());
+
+        /// <summary>
+        /// Invokes the <see cref="Update"/>-event.
+        /// </summary>
+        /// <param name="updateData">Optional custom-data passed to the subscribers of the <see cref="Update"/>.event.</param>
+        protected virtual void OnUpdate(CustomUpdateData? updateData = null) => Update?.Invoke(this, updateData ?? new CustomUpdateData());
+
+        /// <inheritdoc />
+        public abstract void Start();
+
+        /// <inheritdoc />
+        public abstract void Dispose();
+
+        #endregion
+    }
 }

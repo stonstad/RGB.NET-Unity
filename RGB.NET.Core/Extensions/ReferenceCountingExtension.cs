@@ -1,6 +1,7 @@
-﻿namespace RGB.NET.Core;
-
-public static class ReferenceCountingExtension
+﻿namespace RGB.NET.Core
 {
-    public static bool HasActiveReferences(this IReferenceCounting target) => target.ActiveReferenceCount > 0;
+    public static class ReferenceCountingExtension
+    {
+        public static bool HasActiveReferences(this IReferenceCounting target) => target.ActiveReferenceCount > 0;
+    }
 }

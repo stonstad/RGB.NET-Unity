@@ -4,31 +4,33 @@
 using RGB.NET.Core;
 using System.Collections.Generic;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
-/// <summary>
-/// Represents a corsair fan.
-/// </summary>
-public sealed class CorsairFanRGBDevice : CorsairRGBDevice<CorsairFanRGBDeviceInfo>, IFan
+namespace RGB.NET.Devices.Corsair
 {
-    #region Constructors
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
     /// <summary>
-    /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairFanRGBDevice" /> class.
+    /// Represents a corsair fan.
     /// </summary>
-    /// <param name="info">The specific information provided by CUE for the fan.</param>
-    /// <param name="updateQueue">The queue used to update this device.</param>
-    internal CorsairFanRGBDevice(CorsairFanRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
-        : base(info, updateQueue)
-    { }
+    public sealed class CorsairFanRGBDevice : CorsairRGBDevice<CorsairFanRGBDeviceInfo>, IFan
+    {
+        #region Constructors
 
-    #endregion
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairFanRGBDevice" /> class.
+        /// </summary>
+        /// <param name="info">The specific information provided by CUE for the fan.</param>
+        /// <param name="updateQueue">The queue used to update this device.</param>
+        internal CorsairFanRGBDevice(CorsairFanRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
+            : base(info, updateQueue)
+        { }
 
-    #region Methods
+        #endregion
 
-    protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateFanMapping(ids);
+        #region Methods
 
-    #endregion
+        protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateFanMapping(ids);
+
+        #endregion
+    }
 }

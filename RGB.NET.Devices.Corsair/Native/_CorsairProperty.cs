@@ -5,26 +5,28 @@
 
 using System.Runtime.InteropServices;
 
-namespace RGB.NET.Devices.Corsair.Native;
-
-// ReSharper disable once InconsistentNaming
-/// <summary>
-/// iCUE-SDK: contains information about device property type and value
-/// </summary>
-[StructLayout(LayoutKind.Sequential)]
-internal struct _CorsairProperty
+namespace RGB.NET.Devices.Corsair.Native
 {
-    #region Properties & Fields
 
+    // ReSharper disable once InconsistentNaming
     /// <summary>
-    /// iCUE-SDK: type of property
+    /// iCUE-SDK: contains information about device property type and value
     /// </summary>
-    internal CorsairDataType type;
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct _CorsairProperty
+    {
+        #region Properties & Fields
 
-    /// <summary>
-    /// iCUE-SDK: property value
-    /// </summary>
-    internal _CorsairDataValue value;
+        /// <summary>
+        /// iCUE-SDK: type of property
+        /// </summary>
+        internal CorsairDataType type;
 
-    #endregion
+        /// <summary>
+        /// iCUE-SDK: property value
+        /// </summary>
+        internal _CorsairDataValue value;
+
+        #endregion
+    }
 }

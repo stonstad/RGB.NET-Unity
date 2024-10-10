@@ -6,27 +6,30 @@
 
 using System.Runtime.InteropServices;
 
-namespace RGB.NET.Devices.Corsair.Native;
-
-// ReSharper disable once InconsistentNaming    
-/// <summary>
-/// iCUE-SDK: contains information about SDK and iCUE versions
-/// </summary>
-[StructLayout(LayoutKind.Sequential)]
-internal sealed class _CorsairSessionDetails
+namespace RGB.NET.Devices.Corsair.Native
 {
-    /// <summary>
-    /// iCUE-SDK: version of SDK client (like {4,0,1}). Always contains valid value even if there was no iCUE found. Must comply with the semantic versioning rules.
-    /// </summary>
-    internal _CorsairVersion clientVersion = new();
 
+    // ReSharper disable once InconsistentNaming    
     /// <summary>
-    /// iCUE-SDK: version of SDK server (like {4,0,1}) or empty struct ({0,0,0}) if the iCUE was not found. Must comply with the semantic versioning rules.
+    /// iCUE-SDK: contains information about SDK and iCUE versions
     /// </summary>
-    internal _CorsairVersion serverVersion = new();
+    [StructLayout(LayoutKind.Sequential)]
+    internal sealed class _CorsairSessionDetails
+    {
+        /// <summary>
+        /// iCUE-SDK: version of SDK client (like {4,0,1}). Always contains valid value even if there was no iCUE found. Must comply with the semantic versioning rules.
+        /// </summary>
+        internal _CorsairVersion clientVersion = new();
 
-    /// <summary>
-    /// iCUE-SDK: version of iCUE (like {3,33,100}) or empty struct ({0,0,0}) if the iCUE was not found.
-    /// </summary>
-    internal _CorsairVersion serverHostVersion = new();
-};
+        /// <summary>
+        /// iCUE-SDK: version of SDK server (like {4,0,1}) or empty struct ({0,0,0}) if the iCUE was not found. Must comply with the semantic versioning rules.
+        /// </summary>
+        internal _CorsairVersion serverVersion = new();
+
+        /// <summary>
+        /// iCUE-SDK: version of iCUE (like {3,33,100}) or empty struct ({0,0,0}) if the iCUE was not found.
+        /// </summary>
+        internal _CorsairVersion serverHostVersion = new();
+    }
+}
+

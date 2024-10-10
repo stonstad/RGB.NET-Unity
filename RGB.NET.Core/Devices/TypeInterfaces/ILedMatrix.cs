@@ -1,6 +1,11 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// Represents a led-matrix-device
-/// </summary>
-public interface ILedMatrix : IRGBDevice;
+    /// <summary>
+    /// Represents a led-matrix-device
+    /// </summary>
+    public interface ILedMatrix : IRGBDevice
+    {
+
+    }
+}

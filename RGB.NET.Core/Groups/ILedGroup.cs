@@ -1,51 +1,55 @@
-﻿// ReSharper disable UnusedMemberInSuper.Global
+﻿#nullable enable
+
+// ReSharper disable UnusedMemberInSuper.Global
 // ReSharper disable UnusedMember.Global
 
 using System;
 using System.Collections.Generic;
 
-namespace RGB.NET.Core;
-
-/// <summary>
-/// Represents a generic ledgroup.
-/// </summary>
-public interface ILedGroup : IDecoratable<ILedGroupDecorator>, IEnumerable<Led>
+namespace RGB.NET.Core
 {
-    /// <summary>
-    /// Gets the surface this group is attached to or <c>null</c> if it is not attached to any surface.
-    /// </summary>
-    RGBSurface? Surface { get; internal set; }
 
     /// <summary>
-    /// Gets a bool indicating if the group is attached to a surface.
+    /// Represents a generic ledgroup.
     /// </summary>
-    bool IsAttached => Surface != null;
+    public interface ILedGroup : IDecoratable<ILedGroupDecorator>, IEnumerable<Led>
+    {
+        /// <summary>
+        /// Gets the surface this group is attached to or <c>null</c> if it is not attached to any surface.
+        /// </summary>
+        RGBSurface? Surface { get; internal set; }
 
-    /// <summary>
-    /// Gets or sets the <see cref="IBrush"/> which should be drawn over this <see cref="ILedGroup"/>.
-    /// </summary>
-    IBrush? Brush { get; set; }
+        /// <summary>
+        /// Gets a bool indicating if the group is attached to a surface.
+        /// </summary>
+        bool IsAttached => Surface != null;
 
-    /// <summary>
-    /// Gets or sets the z-index of this <see cref="ILedGroup"/> to allow ordering them before drawing. (lowest first) (default: 0)
-    /// </summary>
-    int ZIndex { get; set; }
+        /// <summary>
+        /// Gets or sets the <see cref="IBrush"/> which should be drawn over this <see cref="ILedGroup"/>.
+        /// </summary>
+        IBrush? Brush { get; set; }
 
-    /// <summary>
-    /// Called when the <see cref="ILedGroup"/> is attached to the <see cref="RGBSurface"/>.
-    /// </summary>
-    void OnAttach();
+        /// <summary>
+        /// Gets or sets the z-index of this <see cref="ILedGroup"/> to allow ordering them before drawing. (lowest first) (default: 0)
+        /// </summary>
+        int ZIndex { get; set; }
 
-    /// <summary>
-    /// Called when the <see cref="ILedGroup"/> is detached from the <see cref="RGBSurface"/>.
-    /// </summary>
-    void OnDetach();
+        /// <summary>
+        /// Called when the <see cref="ILedGroup"/> is attached to the <see cref="RGBSurface"/>.
+        /// </summary>
+        void OnAttach();
 
-    /// <summary>
-    /// Returns a list containing all <see cref="Led"/> in this group.
-    /// </summary>
-    /// <returns>A list containing all <see cref="Led"/> in this group.</returns>
-    IList<Led> ToList();
+        /// <summary>
+        /// Called when the <see cref="ILedGroup"/> is detached from the <see cref="RGBSurface"/>.
+        /// </summary>
+        void OnDetach();
 
-    internal IDisposable? ToListUnsafe(out IList<Led> leds);
+        /// <summary>
+        /// Returns a list containing all <see cref="Led"/> in this group.
+        /// </summary>
+        /// <returns>A list containing all <see cref="Led"/> in this group.</returns>
+        IList<Led> ToList();
+
+        internal IDisposable? ToListUnsafe(out IList<Led> leds);
+    }
 }

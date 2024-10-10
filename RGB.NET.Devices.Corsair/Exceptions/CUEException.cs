@@ -3,34 +3,36 @@
 
 using System;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <inheritdoc />
-/// <summary>
-/// Represents an exception thrown by the CUE.
-/// </summary>
-public sealed class CUEException : ApplicationException
+namespace RGB.NET.Devices.Corsair
 {
-    #region Properties & Fields
-
-    /// <summary>
-    /// Gets the <see cref="CorsairError" /> provided by CUE.
-    /// </summary>
-    public CorsairError Error { get; }
-
-    #endregion
-
-    #region Constructors
 
     /// <inheritdoc />
     /// <summary>
-    /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CUEException" /> class.
+    /// Represents an exception thrown by the CUE.
     /// </summary>
-    /// <param name="error">The <see cref="T:RGB.NET.Devices.Corsair.CorsairError" /> provided by CUE, which leads to this exception.</param>
-    public CUEException(CorsairError error)
+    public sealed class CUEException : ApplicationException
     {
-        this.Error = error;
-    }
+        #region Properties & Fields
 
-    #endregion
+        /// <summary>
+        /// Gets the <see cref="CorsairError" /> provided by CUE.
+        /// </summary>
+        public CorsairError Error { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CUEException" /> class.
+        /// </summary>
+        /// <param name="error">The <see cref="T:RGB.NET.Devices.Corsair.CorsairError" /> provided by CUE, which leads to this exception.</param>
+        public CUEException(CorsairError error)
+        {
+            this.Error = error;
+        }
+
+        #endregion
+    }
 }

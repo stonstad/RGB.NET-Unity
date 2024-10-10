@@ -4,37 +4,39 @@
 using RGB.NET.Core;
 using System.Collections.Generic;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
-/// <summary>
-/// Represents a corsair keyboard.
-/// </summary>
-public sealed class CorsairKeyboardRGBDevice : CorsairRGBDevice<CorsairKeyboardRGBDeviceInfo>, IKeyboard
+namespace RGB.NET.Devices.Corsair
 {
-    #region Properties & Fields
 
-    IKeyboardDeviceInfo IKeyboard.DeviceInfo => DeviceInfo;
-
-    #endregion
-
-    #region Constructors
-
-    /// <inheritdoc />
+    /// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
     /// <summary>
-    /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDevice" /> class.
+    /// Represents a corsair keyboard.
     /// </summary>
-    /// <param name="info">The specific information provided by CUE for the keyboard.</param>
-    /// <param name="updateQueue">The queue used to update this device.</param>
-    internal CorsairKeyboardRGBDevice(CorsairKeyboardRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
-        : base(info, updateQueue)
-    { }
+    public sealed class CorsairKeyboardRGBDevice : CorsairRGBDevice<CorsairKeyboardRGBDeviceInfo>, IKeyboard
+    {
+        #region Properties & Fields
 
-    #endregion
+        IKeyboardDeviceInfo IKeyboard.DeviceInfo => DeviceInfo;
 
-    #region Methods
+        #endregion
 
-    protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateKeyboardMapping(ids);
+        #region Constructors
 
-    #endregion
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDevice" /> class.
+        /// </summary>
+        /// <param name="info">The specific information provided by CUE for the keyboard.</param>
+        /// <param name="updateQueue">The queue used to update this device.</param>
+        internal CorsairKeyboardRGBDevice(CorsairKeyboardRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
+            : base(info, updateQueue)
+        { }
+
+        #endregion
+
+        #region Methods
+
+        protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateKeyboardMapping(ids);
+
+        #endregion
+    }
 }

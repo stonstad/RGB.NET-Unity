@@ -2,68 +2,69 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace RGB.NET.Core;
-
-/// <inheritdoc cref="AbstractBindable" />
-/// <inheritdoc cref="IDecoratable{T}" />
-public abstract class AbstractDecoratable<T> : AbstractBindable, IDecoratable<T>
-    where T : IDecorator
+namespace RGB.NET.Core
 {
-    #region Properties & Fields
-
-    private readonly List<T> _decorators = [];
-
-    /// <inheritdoc />
-    public IReadOnlyList<T> Decorators { get; }
-
-    #endregion
-
-    #region Constructors
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AbstractDecoratable{T}"/> class.
-    /// </summary>
-    protected AbstractDecoratable()
+    /// <inheritdoc cref="AbstractBindable" />
+    /// <inheritdoc cref="IDecoratable{T}" />
+    public abstract class AbstractDecoratable<T> : AbstractBindable, IDecoratable<T>
+        where T : IDecorator
     {
-        Decorators = new ReadOnlyCollection<T>(_decorators);
-    }
+        #region Properties & Fields
 
-    #endregion
+        private readonly List<T> _decorators = new List<T>();
 
-    #region Methods
+        /// <inheritdoc />
+        public IReadOnlyList<T> Decorators { get; }
 
-    /// <inheritdoc />
-    public void AddDecorator(T decorator)
-    {
-        lock (Decorators)
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AbstractDecoratable{T}"/> class.
+        /// </summary>
+        protected AbstractDecoratable()
         {
-            _decorators.Add(decorator);
-            _decorators.Sort((d1, d2) => d1.Order.CompareTo(d2.Order));
+            Decorators = new ReadOnlyCollection<T>(_decorators);
         }
 
-        decorator.OnAttached(this);
+        #endregion
+
+        #region Methods
+
+        /// <inheritdoc />
+        public void AddDecorator(T decorator)
+        {
+            lock (Decorators)
+            {
+                _decorators.Add(decorator);
+                _decorators.Sort((d1, d2) => d1.Order.CompareTo(d2.Order));
+            }
+
+            decorator.OnAttached(this);
+        }
+
+        /// <inheritdoc />
+        public void RemoveDecorator(T decorator)
+        {
+            lock (Decorators)
+                _decorators.Remove(decorator);
+
+            decorator.OnDetached(this);
+        }
+
+        /// <inheritdoc />
+        public void RemoveAllDecorators()
+        {
+            IEnumerable<T> decorators;
+
+            lock (Decorators)
+                decorators = Decorators.ToList();
+
+            foreach (T decorator in decorators)
+                RemoveDecorator(decorator);
+        }
+
+        #endregion
     }
-
-    /// <inheritdoc />
-    public void RemoveDecorator(T decorator)
-    {
-        lock (Decorators)
-            _decorators.Remove(decorator);
-
-        decorator.OnDetached(this);
-    }
-
-    /// <inheritdoc />
-    public void RemoveAllDecorators()
-    {
-        IEnumerable<T> decorators;
-
-        lock (Decorators)
-            decorators = Decorators.ToList();
-
-        foreach (T decorator in decorators)
-            RemoveDecorator(decorator);
-    }
-
-    #endregion
 }

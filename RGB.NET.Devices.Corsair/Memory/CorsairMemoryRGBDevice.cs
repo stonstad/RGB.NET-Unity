@@ -4,31 +4,33 @@
 using RGB.NET.Core;
 using System.Collections.Generic;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
-/// <summary>
-/// Represents a corsair memory.
-/// </summary>
-public sealed class CorsairMemoryRGBDevice : CorsairRGBDevice<CorsairMemoryRGBDeviceInfo>, IDRAM
+namespace RGB.NET.Devices.Corsair
 {
-    #region Constructors
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
     /// <summary>
-    /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairMemoryRGBDevice" /> class.
+    /// Represents a corsair memory.
     /// </summary>
-    /// <param name="info">The specific information provided by CUE for the memory.</param>
-    /// <param name="updateQueue">The queue used to update this device.</param>
-    internal CorsairMemoryRGBDevice(CorsairMemoryRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
-        : base(info, updateQueue)
-    { }
+    public sealed class CorsairMemoryRGBDevice : CorsairRGBDevice<CorsairMemoryRGBDeviceInfo>, IDRAM
+    {
+        #region Constructors
 
-    #endregion
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairMemoryRGBDevice" /> class.
+        /// </summary>
+        /// <param name="info">The specific information provided by CUE for the memory.</param>
+        /// <param name="updateQueue">The queue used to update this device.</param>
+        internal CorsairMemoryRGBDevice(CorsairMemoryRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
+            : base(info, updateQueue)
+        { }
 
-    #region Methods
+        #endregion
 
-    protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateMemoryMapping(ids);
+        #region Methods
 
-    #endregion
+        protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateMemoryMapping(ids);
+
+        #endregion
+    }
 }

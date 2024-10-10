@@ -5,33 +5,35 @@
 
 using System.Runtime.InteropServices;
 
-namespace RGB.NET.Devices.Corsair.Native;
-
-// ReSharper disable once InconsistentNaming
-/// <summary>
-/// iCUE-SDK: contains device search filter
-/// </summary>
-[StructLayout(LayoutKind.Sequential)]
-internal sealed class _CorsairDeviceFilter
+namespace RGB.NET.Devices.Corsair.Native
 {
-    #region Properties & Fields
 
+    // ReSharper disable once InconsistentNaming
     /// <summary>
-    /// iCUE-SDK: mask that describes device types, formed as logical “or” of CorsairDeviceType enum values
+    /// iCUE-SDK: contains device search filter
     /// </summary>
-    // ReSharper disable once NotAccessedField.Global
-    internal CorsairDeviceType deviceTypeMask;
-
-    #endregion
-
-    #region Constructors
-
-    public _CorsairDeviceFilter() { }
-
-    public _CorsairDeviceFilter(CorsairDeviceType filter)
+    [StructLayout(LayoutKind.Sequential)]
+    internal sealed class _CorsairDeviceFilter
     {
-        this.deviceTypeMask = filter;
-    }
+        #region Properties & Fields
 
-    #endregion
+        /// <summary>
+        /// iCUE-SDK: mask that describes device types, formed as logical “or” of CorsairDeviceType enum values
+        /// </summary>
+        // ReSharper disable once NotAccessedField.Global
+        internal CorsairDeviceType deviceTypeMask;
+
+        #endregion
+
+        #region Constructors
+
+        public _CorsairDeviceFilter() { }
+
+        public _CorsairDeviceFilter(CorsairDeviceType filter)
+        {
+            this.deviceTypeMask = filter;
+        }
+
+        #endregion
+    }
 }

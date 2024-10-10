@@ -1,6 +1,10 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// Represents a cooler-device
-/// </summary>
-public interface ICooler : IRGBDevice;
+    /// <summary>
+    /// Represents a cooler-device
+    /// </summary>
+    public interface ICooler : IRGBDevice
+    {
+    }
+}

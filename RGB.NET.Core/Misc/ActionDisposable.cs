@@ -1,12 +1,20 @@
 ﻿using System;
 
-namespace RGB.NET.Core;
-
-public sealed class ActionDisposable(Action onDispose) : IDisposable
+namespace RGB.NET.Core
 {
-    #region Methods
+    public sealed class ActionDisposable : IDisposable
+    {
+        private Action onDispose;
 
-    public void Dispose() => onDispose();
+        public ActionDisposable(Action action)
+        {
+            onDispose = action;
+        }
 
-    #endregion
+        #region Methods
+
+        public void Dispose() => onDispose();
+
+        #endregion
+    }
 }

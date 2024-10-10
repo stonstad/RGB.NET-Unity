@@ -3,10 +3,10 @@
 #pragma warning disable 649 // Field 'x' is never assigned
 #pragma warning disable IDE1006 // Naming Styles
 // ReSharper disable NotAccessedField.Global
-
 using System.Runtime.InteropServices;
 
-namespace RGB.NET.Devices.Corsair.Native;
+namespace RGB.NET.Devices.Corsair.Native
+{
 
 // ReSharper disable once InconsistentNaming    
 /// <summary>
@@ -25,3 +25,4 @@ internal sealed class _CorsairSessionStateChanged
     /// </summary>
     internal _CorsairSessionDetails details = new();
 };
+}

@@ -1,6 +1,10 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// represents a fan-device
-/// </summary>
-public interface IFan : IRGBDevice;
+    /// <summary>
+    /// represents a fan-device
+    /// </summary>
+    public interface IFan : IRGBDevice
+    {
+    }
+}

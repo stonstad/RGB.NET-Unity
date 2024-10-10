@@ -2,128 +2,130 @@
 using System.Numerics;
 using RGB.NET.Core;
 
-namespace RGB.NET.Presets.Textures.Sampler;
-
-/// <summary>
-/// Represents a sampled that averages multiple byte-data entries.
-/// </summary>
-public sealed class AverageByteSampler : ISampler<byte>
+namespace RGB.NET.Presets.Textures.Sampler
 {
-    #region Constants
 
-    private static readonly int INT_VECTOR_LENGTH = Vector<uint>.Count;
-
-    #endregion
-
-    #region Methods
-
-    /// <inheritdoc />
-    public unsafe void Sample(in SamplerInfo<byte> info, in Span<byte> pixelData)
+    /// <summary>
+    /// Represents a sampled that averages multiple byte-data entries.
+    /// </summary>
+    public sealed class AverageByteSampler : ISampler<byte>
     {
-        int count = info.Width * info.Height;
-        if (count == 0) return;
+        #region Constants
 
-        int dataLength = pixelData.Length;
-        Span<uint> sums = stackalloc uint[dataLength];
+        private static readonly int INT_VECTOR_LENGTH = Vector<uint>.Count;
 
-        int elementsPerVector = Vector<byte>.Count / dataLength;
-        int valuesPerVector = elementsPerVector * dataLength;
-        if (Vector.IsHardwareAccelerated && (info.Height > 1) && (info.Width >= valuesPerVector) && (dataLength <= Vector<byte>.Count))
+        #endregion
+
+        #region Methods
+
+        /// <inheritdoc />
+        public unsafe void Sample(in SamplerInfo<byte> info, in Span<byte> pixelData)
         {
-            int chunks = info.Width / elementsPerVector;
+            int count = info.Width * info.Height;
+            if (count == 0) return;
 
-            Vector<uint> sum1 = Vector<uint>.Zero;
-            Vector<uint> sum2 = Vector<uint>.Zero;
-            Vector<uint> sum3 = Vector<uint>.Zero;
-            Vector<uint> sum4 = Vector<uint>.Zero;
+            int dataLength = pixelData.Length;
+            Span<uint> sums = stackalloc uint[dataLength];
 
-            for (int y = 0; y < info.Height; y++)
+            int elementsPerVector = Vector<byte>.Count / dataLength;
+            int valuesPerVector = elementsPerVector * dataLength;
+            if (Vector.IsHardwareAccelerated && (info.Height > 1) && (info.Width >= valuesPerVector) && (dataLength <= Vector<byte>.Count))
             {
-                ReadOnlySpan<byte> data = info[y];
+                int chunks = info.Width / elementsPerVector;
 
-                fixed (byte* colorPtr = data)
+                Vector<uint> sum1 = Vector<uint>.Zero;
+                Vector<uint> sum2 = Vector<uint>.Zero;
+                Vector<uint> sum3 = Vector<uint>.Zero;
+                Vector<uint> sum4 = Vector<uint>.Zero;
+
+                for (int y = 0; y < info.Height; y++)
                 {
-                    byte* current = colorPtr;
-                    for (int i = 0; i < chunks; i++)
+                    ReadOnlySpan<byte> data = info[y];
+
+                    fixed (byte* colorPtr = data)
                     {
-                        Vector<byte> bytes = *(Vector<byte>*)current;
-                        Vector.Widen(bytes, out Vector<ushort> short1, out Vector<ushort> short2);
-                        Vector.Widen(short1, out Vector<uint> int1, out Vector<uint> int2);
-                        Vector.Widen(short2, out Vector<uint> int3, out Vector<uint> int4);
+                        byte* current = colorPtr;
+                        for (int i = 0; i < chunks; i++)
+                        {
+                            Vector<byte> bytes = *(Vector<byte>*)current;
+                            Vector.Widen(bytes, out Vector<ushort> short1, out Vector<ushort> short2);
+                            Vector.Widen(short1, out Vector<uint> int1, out Vector<uint> int2);
+                            Vector.Widen(short2, out Vector<uint> int3, out Vector<uint> int4);
 
-                        sum1 = Vector.Add(sum1, int1);
-                        sum2 = Vector.Add(sum2, int2);
-                        sum3 = Vector.Add(sum3, int3);
-                        sum4 = Vector.Add(sum4, int4);
+                            sum1 = Vector.Add(sum1, int1);
+                            sum2 = Vector.Add(sum2, int2);
+                            sum3 = Vector.Add(sum3, int3);
+                            sum4 = Vector.Add(sum4, int4);
 
-                        current += valuesPerVector;
+                            current += valuesPerVector;
+                        }
                     }
+
+                    int missingElements = data.Length - (chunks * valuesPerVector);
+                    int offset = chunks * valuesPerVector;
+                    for (int i = 0; i < missingElements; i += dataLength)
+                        for (int j = 0; j < sums.Length; j++)
+                            sums[j] += data[offset + i + j];
                 }
 
-                int missingElements = data.Length - (chunks * valuesPerVector);
-                int offset = chunks * valuesPerVector;
-                for (int i = 0; i < missingElements; i += dataLength)
-                    for (int j = 0; j < sums.Length; j++)
-                        sums[j] += data[offset + i + j];
-            }
+                int value = 0;
+                int sumIndex = 0;
+                for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
+                {
+                    sums[sumIndex] += sum1[j];
+                    ++sumIndex;
+                    ++value;
 
-            int value = 0;
-            int sumIndex = 0;
-            for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
+                    if (sumIndex >= dataLength)
+                        sumIndex = 0;
+                }
+
+                for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
+                {
+                    sums[sumIndex] += sum2[j];
+                    ++sumIndex;
+                    ++value;
+
+                    if (sumIndex >= dataLength)
+                        sumIndex = 0;
+                }
+
+                for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
+                {
+                    sums[sumIndex] += sum3[j];
+                    ++sumIndex;
+                    ++value;
+
+                    if (sumIndex >= dataLength)
+                        sumIndex = 0;
+                }
+
+                for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
+                {
+                    sums[sumIndex] += sum4[j];
+                    ++sumIndex;
+                    ++value;
+
+                    if (sumIndex >= dataLength)
+                        sumIndex = 0;
+                }
+            }
+            else
             {
-                sums[sumIndex] += sum1[j];
-                ++sumIndex;
-                ++value;
-
-                if (sumIndex >= dataLength)
-                    sumIndex = 0;
+                for (int y = 0; y < info.Height; y++)
+                {
+                    ReadOnlySpan<byte> data = info[y];
+                    for (int i = 0; i < data.Length; i += dataLength)
+                        for (int j = 0; j < sums.Length; j++)
+                            sums[j] += data[i + j];
+                }
             }
 
-            for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
-            {
-                sums[sumIndex] += sum2[j];
-                ++sumIndex;
-                ++value;
-
-                if (sumIndex >= dataLength)
-                    sumIndex = 0;
-            }
-
-            for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
-            {
-                sums[sumIndex] += sum3[j];
-                ++sumIndex;
-                ++value;
-
-                if (sumIndex >= dataLength)
-                    sumIndex = 0;
-            }
-
-            for (int j = 0; (j < INT_VECTOR_LENGTH) && (value < valuesPerVector); j++)
-            {
-                sums[sumIndex] += sum4[j];
-                ++sumIndex;
-                ++value;
-
-                if (sumIndex >= dataLength)
-                    sumIndex = 0;
-            }
-        }
-        else
-        {
-            for (int y = 0; y < info.Height; y++)
-            {
-                ReadOnlySpan<byte> data = info[y];
-                for (int i = 0; i < data.Length; i += dataLength)
-                    for (int j = 0; j < sums.Length; j++)
-                        sums[j] += data[i + j];
-            }
+            float divisor = count * byte.MaxValue;
+            for (int i = 0; i < pixelData.Length; i++)
+                pixelData[i] = (sums[i] / divisor).GetByteValueFromPercentage();
         }
 
-        float divisor = count * byte.MaxValue;
-        for (int i = 0; i < pixelData.Length; i++)
-            pixelData[i] = (sums[i] / divisor).GetByteValueFromPercentage();
+        #endregion
     }
-
-    #endregion
 }

@@ -4,31 +4,33 @@
 using System.Collections.Generic;
 using RGB.NET.Core;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
-/// <summary>
-/// Represents a corsair graphics card.
-/// </summary>
-public sealed class CorsairGraphicsCardRGBDevice : CorsairRGBDevice<CorsairGraphicsCardRGBDeviceInfo>, IGraphicsCard
+namespace RGB.NET.Devices.Corsair
 {
-    #region Constructors
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
     /// <summary>
-    /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairGraphicsCardRGBDevice" /> class.
+    /// Represents a corsair graphics card.
     /// </summary>
-    /// <param name="info">The specific information provided by CUE for the graphics card.</param>
-    /// <param name="updateQueue">The queue used to update this device.</param>
-    internal CorsairGraphicsCardRGBDevice(CorsairGraphicsCardRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
-        : base(info, updateQueue)
-    { }
+    public sealed class CorsairGraphicsCardRGBDevice : CorsairRGBDevice<CorsairGraphicsCardRGBDeviceInfo>, IGraphicsCard
+    {
+        #region Constructors
 
-    #endregion
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairGraphicsCardRGBDevice" /> class.
+        /// </summary>
+        /// <param name="info">The specific information provided by CUE for the graphics card.</param>
+        /// <param name="updateQueue">The queue used to update this device.</param>
+        internal CorsairGraphicsCardRGBDevice(CorsairGraphicsCardRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
+            : base(info, updateQueue)
+        { }
 
-    #region Methods
+        #endregion
 
-    protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateGraphicsCardMapping(ids);
+        #region Methods
 
-    #endregion
+        protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateGraphicsCardMapping(ids);
+
+        #endregion
+    }
 }

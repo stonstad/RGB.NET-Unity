@@ -4,31 +4,33 @@
 using RGB.NET.Core;
 using System.Collections.Generic;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
-/// <summary>
-/// Represents a corsair touchbar.
-/// </summary>
-public sealed class CorsairTouchbarRGBDevice : CorsairRGBDevice<CorsairTouchbarRGBDeviceInfo>, ILedStripe
+namespace RGB.NET.Devices.Corsair
 {
-    #region Constructors
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="CorsairRGBDevice{TDeviceInfo}" />
     /// <summary>
-    /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairTouchbarRGBDevice" /> class.
+    /// Represents a corsair touchbar.
     /// </summary>
-    /// <param name="info">The specific information provided by CUE for the touchbar.</param>
-    /// <param name="updateQueue">The queue used to update this device.</param>
-    internal CorsairTouchbarRGBDevice(CorsairTouchbarRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
-        : base(info, updateQueue)
-    { }
+    public sealed class CorsairTouchbarRGBDevice : CorsairRGBDevice<CorsairTouchbarRGBDeviceInfo>, ILedStripe
+    {
+        #region Constructors
 
-    #endregion
+        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:RGB.NET.Devices.Corsair.CorsairTouchbarRGBDevice" /> class.
+        /// </summary>
+        /// <param name="info">The specific information provided by CUE for the touchbar.</param>
+        /// <param name="updateQueue">The queue used to update this device.</param>
+        internal CorsairTouchbarRGBDevice(CorsairTouchbarRGBDeviceInfo info, CorsairDeviceUpdateQueue updateQueue)
+            : base(info, updateQueue)
+        { }
 
-    #region Methods
+        #endregion
 
-    protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateLedStripMapping(ids);
+        #region Methods
 
-    #endregion
+        protected override LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids) => LedMappings.CreateLedStripMapping(ids);
+
+        #endregion
+    }
 }

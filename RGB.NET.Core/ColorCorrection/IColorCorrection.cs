@@ -1,15 +1,17 @@
 ﻿// ReSharper disable UnusedMember.Global
 
-namespace RGB.NET.Core;
-
-/// <summary>
-/// Represents a generic color-correction.
-/// </summary>
-public interface IColorCorrection
+namespace RGB.NET.Core
 {
+
     /// <summary>
-    /// Applies the <see cref="IColorCorrection"/> to the specified <see cref="Color"/>. 
+    /// Represents a generic color-correction.
     /// </summary>
-    /// <param name="color">The <see cref="Color"/> to correct.</param>
-    void ApplyTo(ref Color color);
+    public interface IColorCorrection
+    {
+        /// <summary>
+        /// Applies the <see cref="IColorCorrection"/> to the specified <see cref="Color"/>. 
+        /// </summary>
+        /// <param name="color">The <see cref="Color"/> to correct.</param>
+        void ApplyTo(ref Color color);
+    }
 }

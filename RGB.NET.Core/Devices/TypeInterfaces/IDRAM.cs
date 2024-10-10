@@ -1,6 +1,10 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// Represents a DRAM-device
-/// </summary>
-public interface IDRAM : IRGBDevice;
+    /// <summary>
+    /// Represents a DRAM-device
+    /// </summary>
+    public interface IDRAM : IRGBDevice
+    {
+    }
+}

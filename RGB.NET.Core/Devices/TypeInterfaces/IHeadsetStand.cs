@@ -1,6 +1,10 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// Represents a headset-stand-device
-/// </summary>
-public interface IHeadsetStand : IRGBDevice;
+    /// <summary>
+    /// Represents a headset-stand-device
+    /// </summary>
+    public interface IHeadsetStand : IRGBDevice
+    {
+    }
+}

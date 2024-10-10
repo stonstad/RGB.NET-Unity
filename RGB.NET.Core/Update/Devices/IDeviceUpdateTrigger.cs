@@ -1,12 +1,14 @@
-﻿namespace RGB.NET.Core;
-
-/// <summary>
-/// Represents an update trigger used to trigger device-updates.
-/// </summary>
-public interface IDeviceUpdateTrigger : IUpdateTrigger
+﻿namespace RGB.NET.Core
 {
+
     /// <summary>
-    /// Indicates that there's data available to process.
+    /// Represents an update trigger used to trigger device-updates.
     /// </summary>
-    void TriggerHasData();
+    public interface IDeviceUpdateTrigger : IUpdateTrigger
+    {
+        /// <summary>
+        /// Indicates that there's data available to process.
+        /// </summary>
+        void TriggerHasData();
+    }
 }

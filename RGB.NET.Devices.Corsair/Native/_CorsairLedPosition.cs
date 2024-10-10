@@ -6,27 +6,28 @@
 
 using System.Runtime.InteropServices;
 
-namespace RGB.NET.Devices.Corsair.Native;
-
-// ReSharper disable once InconsistentNaming    
-/// <summary>
-/// iCUE-SDK: contains led id and position of led
-/// </summary>
-[StructLayout(LayoutKind.Sequential)]
-internal sealed class _CorsairLedPosition
+namespace RGB.NET.Devices.Corsair.Native
 {
+    // ReSharper disable once InconsistentNaming    
     /// <summary>
-    /// iCUE-SDK: unique identifier of led
+    /// iCUE-SDK: contains led id and position of led
     /// </summary>
-    internal uint id;
+    [StructLayout(LayoutKind.Sequential)]
+    internal sealed class _CorsairLedPosition
+    {
+        /// <summary>
+        /// iCUE-SDK: unique identifier of led
+        /// </summary>
+        internal uint id;
 
-    /// <summary>
-    /// iCUE-SDK: for keyboards, mice, mousemats, headset stands and memory modules values are
-    /// </summary>
-    internal double cx;
+        /// <summary>
+        /// iCUE-SDK: for keyboards, mice, mousemats, headset stands and memory modules values are
+        /// </summary>
+        internal double cx;
 
-    /// <summary>
-    /// iCUE-SDK: in mm, for DIY-devices, headsets and coolers values are in logical units
-    /// </summary>
-    internal double cy;
-};
+        /// <summary>
+        /// iCUE-SDK: in mm, for DIY-devices, headsets and coolers values are in logical units
+        /// </summary>
+        internal double cy;
+    };
+}

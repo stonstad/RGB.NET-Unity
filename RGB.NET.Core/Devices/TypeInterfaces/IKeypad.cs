@@ -1,6 +1,10 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// Represents a keypad-device
-/// </summary>
-public interface IKeypad : IRGBDevice;
+    /// <summary>
+    /// Represents a keypad-device
+    /// </summary>
+    public interface IKeypad : IRGBDevice
+    {
+    }
+}

@@ -2,17 +2,18 @@
 using System.Linq;
 using RGB.NET.Core;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <summary>
-/// Contains mappings for <see cref="LedId"/> to <see cref="CorsairLedId"/>.
-/// </summary>
-internal static class LedMappings
+namespace RGB.NET.Devices.Corsair
 {
-    #region Constants
 
-    // ReSharper disable once InconsistentNaming
-    private static LedMapping<CorsairLedId> KEYBOARD_MAPPING => new()
+    /// <summary>
+    /// Contains mappings for <see cref="LedId"/> to <see cref="CorsairLedId"/>.
+    /// </summary>
+    internal static class LedMappings
+    {
+        #region Constants
+
+        // ReSharper disable once InconsistentNaming
+        private static LedMapping<CorsairLedId> KEYBOARD_MAPPING => new()
     {
         { LedId.Invalid, new CorsairLedId(CorsairLedGroup.Keyboard, CorsairLedIdKeyboard.Invalid) },
         { LedId.Keyboard_Escape, new CorsairLedId(CorsairLedGroup.Keyboard, CorsairLedIdKeyboard.Escape) },
@@ -146,67 +147,68 @@ internal static class LedMappings
         { LedId.Keyboard_Function, new CorsairLedId(CorsairLedGroup.Keyboard, CorsairLedIdKeyboard.Fn) }
     };
 
-    #endregion
+        #endregion
 
-    #region Methods
+        #region Methods
 
-    internal static LedMapping<CorsairLedId> CreateFanMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Fan1);
-    internal static LedMapping<CorsairLedId> CreateCoolerMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Cooler1);
-    internal static LedMapping<CorsairLedId> CreateLedStripMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.LedStripe1);
-    internal static LedMapping<CorsairLedId> CreateGraphicsCardMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.GraphicsCard1);
-    internal static LedMapping<CorsairLedId> CreateHeadsetStandMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.HeadsetStand1);
-    internal static LedMapping<CorsairLedId> CreateMainboardMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Mainboard1);
-    internal static LedMapping<CorsairLedId> CreateMemoryMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.DRAM1);
-    internal static LedMapping<CorsairLedId> CreateMousepadMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Mousepad1);
-    internal static LedMapping<CorsairLedId> CreateHeadsetMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Headset1);
-    internal static LedMapping<CorsairLedId> CreateMouseMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Mouse1);
-    internal static LedMapping<CorsairLedId> CreateGameControllerMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.GameController1);
-    internal static LedMapping<CorsairLedId> CreateUnknownMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Unknown1);
+        internal static LedMapping<CorsairLedId> CreateFanMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Fan1);
+        internal static LedMapping<CorsairLedId> CreateCoolerMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Cooler1);
+        internal static LedMapping<CorsairLedId> CreateLedStripMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.LedStripe1);
+        internal static LedMapping<CorsairLedId> CreateGraphicsCardMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.GraphicsCard1);
+        internal static LedMapping<CorsairLedId> CreateHeadsetStandMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.HeadsetStand1);
+        internal static LedMapping<CorsairLedId> CreateMainboardMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Mainboard1);
+        internal static LedMapping<CorsairLedId> CreateMemoryMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.DRAM1);
+        internal static LedMapping<CorsairLedId> CreateMousepadMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Mousepad1);
+        internal static LedMapping<CorsairLedId> CreateHeadsetMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Headset1);
+        internal static LedMapping<CorsairLedId> CreateMouseMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Mouse1);
+        internal static LedMapping<CorsairLedId> CreateGameControllerMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.GameController1);
+        internal static LedMapping<CorsairLedId> CreateUnknownMapping(IEnumerable<CorsairLedId> ids) => CreateMapping(ids, LedId.Unknown1);
 
-    internal static LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids, LedId referenceId)
-    {
-        LedMapping<CorsairLedId> mapping = [];
-        int counter = 0;
-        foreach (CorsairLedId corsairLedId in ids.OrderBy(x => x))
-            mapping.Add(referenceId + counter++, corsairLedId);
-
-        return mapping;
-    }
-
-    internal static LedMapping<CorsairLedId> CreateKeyboardMapping(IEnumerable<CorsairLedId> ids)
-    {
-        Dictionary<CorsairLedGroup, int> groupCounter = new()
+        internal static LedMapping<CorsairLedId> CreateMapping(IEnumerable<CorsairLedId> ids, LedId referenceId)
         {
-            [CorsairLedGroup.KeyboardOem] = 0,
-            [CorsairLedGroup.KeyboardGKeys] = 0,
-            [CorsairLedGroup.KeyboardEdge] = 0,
-            [CorsairLedGroup.Keyboard] = 0 // Workaround for unknown keys
-        };
+            LedMapping<CorsairLedId> mapping = new LedMapping<CorsairLedId>();
+            int counter = 0;
+            foreach (CorsairLedId corsairLedId in ids.OrderBy(x => x))
+                mapping.Add(referenceId + counter++, corsairLedId);
 
-        LedMapping<CorsairLedId> mapping = KEYBOARD_MAPPING;
+            return mapping;
+        }
 
-        foreach (CorsairLedId corsairLedId in ids.OrderBy(x => x).Where(x => x.Group != CorsairLedGroup.Keyboard))
-            switch (corsairLedId.Group)
+        internal static LedMapping<CorsairLedId> CreateKeyboardMapping(IEnumerable<CorsairLedId> ids)
+        {
+            Dictionary<CorsairLedGroup, int> groupCounter = new()
             {
-                case CorsairLedGroup.KeyboardOem:
-                    mapping.Add(LedId.Keyboard_Custom1 + groupCounter[CorsairLedGroup.KeyboardOem]++, corsairLedId);
-                    break;
+                [CorsairLedGroup.KeyboardOem] = 0,
+                [CorsairLedGroup.KeyboardGKeys] = 0,
+                [CorsairLedGroup.KeyboardEdge] = 0,
+                [CorsairLedGroup.Keyboard] = 0 // Workaround for unknown keys
+            };
 
-                case CorsairLedGroup.KeyboardGKeys:
-                    mapping.Add(LedId.Keyboard_Programmable1 + groupCounter[CorsairLedGroup.KeyboardGKeys]++, corsairLedId);
-                    break;
+            LedMapping<CorsairLedId> mapping = KEYBOARD_MAPPING;
 
-                case CorsairLedGroup.KeyboardEdge:
-                    mapping.Add(LedId.LedStripe1 + groupCounter[CorsairLedGroup.KeyboardEdge]++, corsairLedId);
-                    break;
+            foreach (CorsairLedId corsairLedId in ids.OrderBy(x => x).Where(x => x.Group != CorsairLedGroup.Keyboard))
+                switch (corsairLedId.Group)
+                {
+                    case CorsairLedGroup.KeyboardOem:
+                        mapping.Add(LedId.Keyboard_Custom1 + groupCounter[CorsairLedGroup.KeyboardOem]++, corsairLedId);
+                        break;
 
-                default:
-                    mapping.Add(LedId.Unknown1 + groupCounter[CorsairLedGroup.Keyboard]++, corsairLedId);
-                    break;
-            }
+                    case CorsairLedGroup.KeyboardGKeys:
+                        mapping.Add(LedId.Keyboard_Programmable1 + groupCounter[CorsairLedGroup.KeyboardGKeys]++, corsairLedId);
+                        break;
 
-        return mapping;
+                    case CorsairLedGroup.KeyboardEdge:
+                        mapping.Add(LedId.LedStripe1 + groupCounter[CorsairLedGroup.KeyboardEdge]++, corsairLedId);
+                        break;
+
+                    default:
+                        mapping.Add(LedId.Unknown1 + groupCounter[CorsairLedGroup.Keyboard]++, corsairLedId);
+                        break;
+                }
+
+            return mapping;
+        }
+
+        #endregion
     }
-
-    #endregion
 }

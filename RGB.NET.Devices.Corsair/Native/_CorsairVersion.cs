@@ -6,26 +6,27 @@
 
 using System.Runtime.InteropServices;
 
-namespace RGB.NET.Devices.Corsair.Native;
-
-// ReSharper disable once InconsistentNaming    
-/// <summary>
-/// iCUE-SDK: contains information about version that consists of three components
-/// </summary>
-[StructLayout(LayoutKind.Sequential)]
-internal sealed class _CorsairVersion
+namespace RGB.NET.Devices.Corsair.Native
 {
-    #region Properties & Fields
+    // ReSharper disable once InconsistentNaming    
+    /// <summary>
+    /// iCUE-SDK: contains information about version that consists of three components
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
+    internal sealed class _CorsairVersion
+    {
+        #region Properties & Fields
 
-    internal int major;
-    internal int minor;
-    internal int patch;
+        internal int major;
+        internal int minor;
+        internal int patch;
 
-    #endregion
+        #endregion
 
-    #region Methods
+        #region Methods
 
-    public override string ToString() => $"{major}.{minor}.{patch}";
+        public override string ToString() => $"{major}.{minor}.{patch}";
 
-    #endregion
-};
+        #endregion
+    };
+}

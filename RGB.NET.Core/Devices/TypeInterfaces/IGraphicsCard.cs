@@ -1,6 +1,10 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// Represents a graphics-card-device
-/// </summary>
-public interface IGraphicsCard : IRGBDevice;
+    /// <summary>
+    /// Represents a graphics-card-device
+    /// </summary>
+    public interface IGraphicsCard : IRGBDevice
+    {
+    }
+}

@@ -1,12 +1,14 @@
-﻿namespace RGB.NET.Core;
-
-internal sealed class EmptyTexture : ITexture
+﻿namespace RGB.NET.Core
 {
-    #region Properties & Fields
 
-    public Size Size { get; } = new(0, 0);
-    public Color this[in Point point] => Color.Transparent;
-    public Color this[in Rectangle rectangle] => Color.Transparent;
+    internal sealed class EmptyTexture : ITexture
+    {
+        #region Properties & Fields
 
-    #endregion
+        public Size Size { get; } = new(0, 0);
+        public Color this[in Point point] => Color.Transparent;
+        public Color this[in Rectangle rectangle] => Color.Transparent;
+
+        #endregion
+    }
 }

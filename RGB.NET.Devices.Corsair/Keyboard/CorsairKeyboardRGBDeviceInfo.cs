@@ -4,54 +4,56 @@
 using RGB.NET.Core;
 using RGB.NET.Devices.Corsair.Native;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <summary>
-/// Represents a generic information for a <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDevice" />.
-/// </summary>
-public sealed class CorsairKeyboardRGBDeviceInfo : CorsairRGBDeviceInfo, IKeyboardDeviceInfo
+namespace RGB.NET.Devices.Corsair
 {
-    #region Properties & Fields
-
-    /// <inheritdoc />
-    public KeyboardLayoutType Layout { get; }
 
     /// <summary>
-    /// Gets the physical layout of the keyboard.
+    /// Represents a generic information for a <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDevice" />.
     /// </summary>
-    public CorsairPhysicalKeyboardLayout PhysicalLayout { get; }
-
-    /// <summary>
-    /// Gets the logical layout of the keyboard as set in CUE settings.
-    /// </summary>
-    public CorsairLogicalKeyboardLayout LogicalLayout { get; }
-
-    #endregion
-
-    #region Constructors
-
-    /// <inheritdoc />
-    /// <summary>
-    /// Internal constructor of managed <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDeviceInfo" />.
-    /// </summary>
-    /// <param name="deviceIndex">The index of the <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDevice" />.</param>
-    /// <param name="nativeInfo">The native <see cref="T:RGB.NET.Devices.Corsair.Native._CorsairDeviceInfo" />-struct</param>
-    internal CorsairKeyboardRGBDeviceInfo(_CorsairDeviceInfo nativeInfo, int ledCount, int ledOffset)
-        : base(RGBDeviceType.Keyboard, nativeInfo, ledCount, ledOffset)
+    public sealed class CorsairKeyboardRGBDeviceInfo : CorsairRGBDeviceInfo, IKeyboardDeviceInfo
     {
-        PhysicalLayout = (CorsairPhysicalKeyboardLayout)_CUESDK.ReadDevicePropertySimpleInt32(nativeInfo.id!, CorsairDevicePropertyId.PhysicalLayout);
-        LogicalLayout = (CorsairLogicalKeyboardLayout)_CUESDK.ReadDevicePropertySimpleInt32(nativeInfo.id!, CorsairDevicePropertyId.LogicalLayout);
+        #region Properties & Fields
 
-        this.Layout = PhysicalLayout switch
+        /// <inheritdoc />
+        public KeyboardLayoutType Layout { get; }
+
+        /// <summary>
+        /// Gets the physical layout of the keyboard.
+        /// </summary>
+        public CorsairPhysicalKeyboardLayout PhysicalLayout { get; }
+
+        /// <summary>
+        /// Gets the logical layout of the keyboard as set in CUE settings.
+        /// </summary>
+        public CorsairLogicalKeyboardLayout LogicalLayout { get; }
+
+        #endregion
+
+        #region Constructors
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Internal constructor of managed <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDeviceInfo" />.
+        /// </summary>
+        /// <param name="deviceIndex">The index of the <see cref="T:RGB.NET.Devices.Corsair.CorsairKeyboardRGBDevice" />.</param>
+        /// <param name="nativeInfo">The native <see cref="T:RGB.NET.Devices.Corsair.Native._CorsairDeviceInfo" />-struct</param>
+        internal CorsairKeyboardRGBDeviceInfo(_CorsairDeviceInfo nativeInfo, int ledCount, int ledOffset)
+            : base(RGBDeviceType.Keyboard, nativeInfo, ledCount, ledOffset)
         {
-            CorsairPhysicalKeyboardLayout.US => KeyboardLayoutType.ANSI,
-            CorsairPhysicalKeyboardLayout.UK => KeyboardLayoutType.ISO,
-            CorsairPhysicalKeyboardLayout.BR => KeyboardLayoutType.ABNT,
-            CorsairPhysicalKeyboardLayout.JP => KeyboardLayoutType.JIS,
-            CorsairPhysicalKeyboardLayout.KR => KeyboardLayoutType.KS,
-            _ => KeyboardLayoutType.Unknown
-        };
-    }
+            PhysicalLayout = (CorsairPhysicalKeyboardLayout)_CUESDK.ReadDevicePropertySimpleInt32(nativeInfo.id!, CorsairDevicePropertyId.PhysicalLayout);
+            LogicalLayout = (CorsairLogicalKeyboardLayout)_CUESDK.ReadDevicePropertySimpleInt32(nativeInfo.id!, CorsairDevicePropertyId.LogicalLayout);
 
-    #endregion
+            this.Layout = PhysicalLayout switch
+            {
+                CorsairPhysicalKeyboardLayout.US => KeyboardLayoutType.ANSI,
+                CorsairPhysicalKeyboardLayout.UK => KeyboardLayoutType.ISO,
+                CorsairPhysicalKeyboardLayout.BR => KeyboardLayoutType.ABNT,
+                CorsairPhysicalKeyboardLayout.JP => KeyboardLayoutType.JIS,
+                CorsairPhysicalKeyboardLayout.KR => KeyboardLayoutType.KS,
+                _ => KeyboardLayoutType.Unknown
+            };
+        }
+
+        #endregion
+    }
 }

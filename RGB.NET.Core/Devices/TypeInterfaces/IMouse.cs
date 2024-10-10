@@ -1,6 +1,10 @@
-﻿namespace RGB.NET.Core;
+﻿namespace RGB.NET.Core
+{
 
-/// <summary>
-/// Represents a mouse-device
-/// </summary>
-public interface IMouse : IRGBDevice;
+    /// <summary>
+    /// Represents a mouse-device
+    /// </summary>
+    public interface IMouse : IRGBDevice
+    {
+    }
+}

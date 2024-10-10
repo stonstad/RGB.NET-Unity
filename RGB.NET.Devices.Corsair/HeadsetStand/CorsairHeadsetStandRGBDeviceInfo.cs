@@ -1,20 +1,22 @@
 ﻿using RGB.NET.Core;
 using RGB.NET.Devices.Corsair.Native;
 
-namespace RGB.NET.Devices.Corsair;
-
-/// <inheritdoc />
-/// <summary>
-/// Represents a generic information for a <see cref="T:RGB.NET.Devices.Corsair.CorsairHeadsetStandRGBDevice" />.
-/// </summary>
-public sealed class CorsairHeadsetStandRGBDeviceInfo : CorsairRGBDeviceInfo
+namespace RGB.NET.Devices.Corsair
 {
-    #region Constructors
 
     /// <inheritdoc />
-    internal CorsairHeadsetStandRGBDeviceInfo(_CorsairDeviceInfo nativeInfo, int ledCount, int ledOffset)
-        : base(RGBDeviceType.HeadsetStand, nativeInfo, ledCount, ledOffset)
-    { }
+    /// <summary>
+    /// Represents a generic information for a <see cref="T:RGB.NET.Devices.Corsair.CorsairHeadsetStandRGBDevice" />.
+    /// </summary>
+    public sealed class CorsairHeadsetStandRGBDeviceInfo : CorsairRGBDeviceInfo
+    {
+        #region Constructors
 
-    #endregion
+        /// <inheritdoc />
+        internal CorsairHeadsetStandRGBDeviceInfo(_CorsairDeviceInfo nativeInfo, int ledCount, int ledOffset)
+            : base(RGBDeviceType.HeadsetStand, nativeInfo, ledCount, ledOffset)
+        { }
+
+        #endregion
+    }
 }
