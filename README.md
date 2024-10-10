@@ -1,6 +1,6 @@
 # RGB.NET-Unity
 
-This is a fork of [RGB.NET](https://github.com/DarthAffe/RGB.NET), an outstanding .NET library created by [DarthAffe](https://github.com/DarthAffe) for controlling RGB-devices.
+This is a Unity-compatible fork of [RGB.NET](https://github.com/DarthAffe/RGB.NET), an outstanding .NET library created by [DarthAffe](https://github.com/DarthAffe) for controlling RGB-devices.
 
 > **IMPORTANT NOTE**   
 This fork is an **interim** solution until Unity releases support for CoreCLR and .NET 8 within their engine. You should use the original project's libraries in Unity 7.0.
