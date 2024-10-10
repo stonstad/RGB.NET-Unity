@@ -29,6 +29,7 @@ using UnityEngine;
 public class TestScript : MonoBehaviour
 {
     private RGBSurface _Surface;
+
     private void Start()
     {
         Task.Run(() =>
