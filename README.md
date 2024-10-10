@@ -3,7 +3,7 @@
 This is a fork of [RGB.NET](https://github.com/DarthAffe/RGB.NET), an outstanding .NET library created by [DarthAffe](https://github.com/DarthAffe) for controlling RGB-devices.
 
 > **IMPORTANT NOTE**   
-This fork is an **interim** solution until Unity ureleases support for CoreCLR and .NET 8 within their engine. You should use the original project's libraries in Unity 7.0.
+This fork is an **interim** solution until Unity releases support for CoreCLR and .NET 8 within their engine. You should use the original project's libraries in Unity 7.0.
 
 ## Changes ##
 The code within this repository has been modified to support .NET Standard 2.1, Unity 2022.x, and Corsair RGB devices. Full source code with modifications is provided in this repository per the existing LGPL license. Please send all accoldades to [DarthAffe](https://github.com/DarthAffe). Modifications are as follows:
