@@ -6,7 +6,7 @@ This is a Unity-compatible fork of [RGB.NET](https://github.com/DarthAffe/RGB.NE
 This fork is an **interim** solution until Unity releases support for CoreCLR and .NET 8 within their engine. You should use the original project's libraries in Unity 7.0.
 
 ## Changes ##
-The code within this repository has been modified to support .NET Standard 2.1, Unity 2022.x, and Corsair RGB devices. Full source code with modifications is provided in this repository per the existing LGPL license. Please send all accoldades to [DarthAffe](https://github.com/DarthAffe). Modifications are as follows:
+The code within this repository has been modified to support .NET Standard 2.1, Unity 2022.x, and Corsair RGB devices. Full source code with modifications is provided in this repository per the existing LGPL license. Please send all accolades to [DarthAffe](https://github.com/DarthAffe). Modifications are as follows:
 
 - Remove file-scoped namespace definitions for compatibility with C# 9.0.
 - Add default body to interface specifications.
