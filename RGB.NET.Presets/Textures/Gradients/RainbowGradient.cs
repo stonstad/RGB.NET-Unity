@@ -40,6 +40,16 @@ namespace RGB.NET.Presets.Textures.Gradients
             set => SetProperty(ref _endHue, value);
         }
 
+        /// <summary>
+        /// Gets or sets the saturation (0.0 to 1.0).
+        /// </summary>
+        public float Saturation { get; set; } = 1;
+
+        /// <summary>
+        /// Gets or sets the brightness (HSV value, 0.0 to 1.0).
+        /// </summary>
+        public float Brightness { get; set; } = 1;
+
         #endregion
 
         #region Events
@@ -78,7 +88,7 @@ namespace RGB.NET.Presets.Textures.Gradients
         {
             float range = EndHue - StartHue;
             float hue = StartHue + (range * offset);
-            return HSVColor.Create(hue, 1, 1);
+            return HSVColor.Create(hue, Saturation, Brightness);
         }
 
         /// <inheritdoc />
