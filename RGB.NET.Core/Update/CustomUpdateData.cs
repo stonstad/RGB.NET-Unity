@@ -54,6 +54,7 @@ namespace RGB.NET.Core
     public sealed class CustomUpdateData : ICustomUpdateData
     {
         #region Properties & Fields
+        public static readonly CustomUpdateData Empty = new CustomUpdateData();
 
         private readonly Dictionary<string, object?> _data = new Dictionary<string, object?>();
 
