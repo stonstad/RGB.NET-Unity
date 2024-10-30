@@ -11,7 +11,7 @@ The code within this repository has been modified to support .NET Standard 2.1, 
 - Remove file-scoped namespace definitions for compatibility with C# 9.0.
 - Add default body to interface specifications.
 - Remove platform checks and enforce selection of the Window platform.
-- Change collection initialization syntax for compaatibility with C# 9.0.
+- Change collection initialization syntax for compatibility with C# 9.0.
 - Enable nullable within file scopes.
 - Add [NativeLibrary](https://github.com/udaken/Shim4DotNetFramework.NativeLibrary/tree/main) shim for compatibility with .NET Core Interop.
 
