@@ -16,6 +16,12 @@ namespace RGB.NET.Devices.Corsair.Native
 
     internal delegate void CorsairSessionStateChangedHandler(nint context, _CorsairSessionStateChanged eventData);
 
+    [AttributeUsage(AttributeTargets.Method)]
+    internal class MonoPInvokeCallbackAttribute : Attribute
+    {
+        public MonoPInvokeCallbackAttribute(Type t) { }
+    }
+
     // ReSharper disable once InconsistentNaming
     internal static unsafe class _CUESDK
     {
@@ -75,6 +81,7 @@ namespace RGB.NET.Devices.Corsair.Native
 
         #region Methods
 
+        [MonoPInvokeCallback(typeof(CorsairSessionStateChangedHandler))]
         private static void CorsairSessionStateChangedCallback(nint context, _CorsairSessionStateChanged eventdata)
         {
             SesionState = eventdata.state;
@@ -100,46 +107,34 @@ namespace RGB.NET.Devices.Corsair.Native
         {
             if (_handle != 0) return;
 
-            List<string> possiblePathList = GetPossibleLibraryPaths().ToList();
-
-            string? dllPath = possiblePathList.FirstOrDefault(File.Exists);
-            if (dllPath == null) throw new RGBDeviceException($"Can't find the CUE-SDK at one of the expected locations:\r\n '{string.Join("\r\n", possiblePathList.Select(Path.GetFullPath))}'");
+            string? dllPath = CorsairDeviceProvider.PossibleX64NativePaths.FirstOrDefault(File.Exists);
+            if (dllPath == null)
+                throw new RGBDeviceException($"Can't find the CUE-SDK at one of the expected locations:\r\n '{string.Join("\r\n", CorsairDeviceProvider.PossibleX64NativePaths.Select(Path.GetFullPath))}'");
 
             if (!NativeLibrary.TryLoad(dllPath, out _handle))
                 throw new RGBDeviceException($"Corsair LoadLibrary failed");
             //throw new RGBDeviceException($"Corsair LoadLibrary failed with error code {Marshal.GetLastPInvokeError()}");
 
-            _corsairConnectPtr = (delegate* unmanaged[Cdecl]<CorsairSessionStateChangedHandler, nint, CorsairError>)LoadFunction("CorsairConnect");
-            _corsairGetSessionDetails = (delegate* unmanaged[Cdecl]<nint, CorsairError>)LoadFunction("CorsairGetSessionDetails");
-            _corsairDisconnect = (delegate* unmanaged[Cdecl]<CorsairError>)LoadFunction("CorsairDisconnect");
-            _corsairGetDevices = (delegate* unmanaged[Cdecl]<_CorsairDeviceFilter, int, nint, out int, CorsairError>)LoadFunction("CorsairGetDevices");
-            _corsairGetDeviceInfo = (delegate* unmanaged[Cdecl]<string, _CorsairDeviceInfo, CorsairError>)LoadFunction("CorsairGetDeviceInfo");
-            _corsairGetLedPositions = (delegate* unmanaged[Cdecl]<string, int, nint, out int, CorsairError>)LoadFunction("CorsairGetLedPositions");
-            _corsairSetLedColors = (delegate* unmanaged[Cdecl]<string, int, nint, CorsairError>)LoadFunction("CorsairSetLedColors");
-            _corsairSetLayerPriority = (delegate* unmanaged[Cdecl]<uint, CorsairError>)LoadFunction("CorsairSetLayerPriority");
-            _corsairGetLedLuidForKeyName = (delegate* unmanaged[Cdecl]<string, char, out uint, CorsairError>)LoadFunction("CorsairGetLedLuidForKeyName");
-            _corsairRequestControl = (delegate* unmanaged[Cdecl]<string, CorsairAccessLevel, CorsairError>)LoadFunction("CorsairRequestControl");
-            _corsairReleaseControl = (delegate* unmanaged[Cdecl]<string, CorsairError>)LoadFunction("CorsairReleaseControl");
-            _getDevicePropertyInfo = (delegate* unmanaged[Cdecl]<string, CorsairDevicePropertyId, uint, out CorsairDataType, out CorsairPropertyFlag, CorsairError>)LoadFunction("CorsairGetDevicePropertyInfo");
-            _readDeviceProperty = (delegate* unmanaged[Cdecl]<string, CorsairDevicePropertyId, uint, nint, CorsairError>)LoadFunction("CorsairReadDeviceProperty");
+            _corsairConnectPtr = Marshal.GetDelegateForFunctionPointer<CorsairConnectPtrDelegate>(LoadFunction("CorsairConnect"));
+            _corsairGetSessionDetails = Marshal.GetDelegateForFunctionPointer<CorsairGetSessionDetailsDelegate>(LoadFunction("CorsairGetSessionDetails"));
+            _corsairDisconnect = Marshal.GetDelegateForFunctionPointer<CorsairDisconnectDelegate>(LoadFunction("CorsairDisconnect"));
+            _corsairGetDevices = Marshal.GetDelegateForFunctionPointer<CorsairGetDevicesDelegate>(LoadFunction("CorsairGetDevices"));
+            _corsairGetDeviceInfo = Marshal.GetDelegateForFunctionPointer<CorsairGetDeviceInfoDelegate>(LoadFunction("CorsairGetDeviceInfo"));
+            _corsairGetLedPositions = Marshal.GetDelegateForFunctionPointer<CorsairGetLedPositionsDelegate>(LoadFunction("CorsairGetLedPositions"));
+            _corsairSetLedColors = Marshal.GetDelegateForFunctionPointer<CorsairSetLedColorsDelegate>(LoadFunction("CorsairSetLedColors"));
+            _corsairSetLayerPriority = Marshal.GetDelegateForFunctionPointer<CorsairSetLayerPriorityDelegate>(LoadFunction("CorsairSetLayerPriority"));
+            _corsairGetLedLuidForKeyName = Marshal.GetDelegateForFunctionPointer<CorsairGetLedLuidForKeyNameDelegate>(LoadFunction("CorsairGetLedLuidForKeyName"));
+            _corsairRequestControl = Marshal.GetDelegateForFunctionPointer<CorsairRequestControlDelegate>(LoadFunction("CorsairRequestControl"));
+            _corsairReleaseControl = Marshal.GetDelegateForFunctionPointer<CorsairReleaseControlDelegate>(LoadFunction("CorsairReleaseControl"));
+            _getDevicePropertyInfo = Marshal.GetDelegateForFunctionPointer<GetDevicePropertyInfoDelegate>(LoadFunction("CorsairGetDevicePropertyInfo"));
+            _readDeviceProperty = Marshal.GetDelegateForFunctionPointer<ReadDevicePropertyDelegate>(LoadFunction("CorsairReadDeviceProperty"));
         }
 
         private static nint LoadFunction(string function)
         {
-            if (!NativeLibrary.TryGetExport(_handle, function, out nint ptr)) throw new RGBDeviceException($"Failed to load Corsair function '{function}'");
+            if (!NativeLibrary.TryGetExport(_handle, function, out nint ptr))
+                throw new RGBDeviceException($"Failed to load Corsair function '{function}'");
             return ptr;
-        }
-
-        private static IEnumerable<string> GetPossibleLibraryPaths()
-        {
-            IEnumerable<string> possibleLibraryPaths;
-            //if (OperatingSystem.IsWindows())
-            //possibleLibraryPaths = Environment.Is64BitProcess ? CorsairDeviceProvider.PossibleX64NativePaths : CorsairDeviceProvider.PossibleX86NativePaths;
-            //else
-            //possibleLibraryPaths = Enumerable.Empty<string>();
-            possibleLibraryPaths = CorsairDeviceProvider.PossibleX64NativePaths;
-
-            return possibleLibraryPaths.Select(Environment.ExpandEnvironmentVariables);
         }
 
         internal static void UnloadCUESDK()
@@ -170,19 +165,35 @@ namespace RGB.NET.Devices.Corsair.Native
 
         #region Pointers
 
-        private static delegate* unmanaged[Cdecl]<CorsairSessionStateChangedHandler, nint, CorsairError> _corsairConnectPtr;
-        private static delegate* unmanaged[Cdecl]<nint, CorsairError> _corsairGetSessionDetails;
-        private static delegate* unmanaged[Cdecl]<CorsairError> _corsairDisconnect;
-        private static delegate* unmanaged[Cdecl]<_CorsairDeviceFilter, int, nint, out int, CorsairError> _corsairGetDevices;
-        private static delegate* unmanaged[Cdecl]<string, _CorsairDeviceInfo, CorsairError> _corsairGetDeviceInfo;
-        private static delegate* unmanaged[Cdecl]<string, int, nint, out int, CorsairError> _corsairGetLedPositions;
-        private static delegate* unmanaged[Cdecl]<string, int, nint, CorsairError> _corsairSetLedColors;
-        private static delegate* unmanaged[Cdecl]<uint, CorsairError> _corsairSetLayerPriority;
-        private static delegate* unmanaged[Cdecl]<string, char, out uint, CorsairError> _corsairGetLedLuidForKeyName;
-        private static delegate* unmanaged[Cdecl]<string, CorsairAccessLevel, CorsairError> _corsairRequestControl;
-        private static delegate* unmanaged[Cdecl]<string, CorsairError> _corsairReleaseControl;
-        private static delegate* unmanaged[Cdecl]<string, CorsairDevicePropertyId, uint, out CorsairDataType, out CorsairPropertyFlag, CorsairError> _getDevicePropertyInfo;
-        private static delegate* unmanaged[Cdecl]<string, CorsairDevicePropertyId, uint, nint, CorsairError> _readDeviceProperty;
+        public delegate void CorsairSessionStateChangedHandler(nint session, _CorsairSessionStateChanged eventData);
+
+        public delegate CorsairError CorsairConnectPtrDelegate(CorsairSessionStateChangedHandler handler, nint context);
+        public delegate CorsairError CorsairGetSessionDetailsDelegate(nint details);
+        public delegate CorsairError CorsairDisconnectDelegate();
+        public delegate CorsairError CorsairGetDevicesDelegate(_CorsairDeviceFilter filter, int count, nint devices, out int result);
+        public delegate CorsairError CorsairGetDeviceInfoDelegate(string deviceId, _CorsairDeviceInfo info);
+        public delegate CorsairError CorsairGetLedPositionsDelegate(string deviceId, int ledCount, nint ledPositions, out int result);
+        public delegate CorsairError CorsairSetLedColorsDelegate(string deviceId, int ledCount, nint ledColors);
+        public delegate CorsairError CorsairSetLayerPriorityDelegate(uint priority);
+        public delegate CorsairError CorsairGetLedLuidForKeyNameDelegate(string deviceId, char keyName, out uint luid);
+        public delegate CorsairError CorsairRequestControlDelegate(string deviceId, CorsairAccessLevel accessLevel);
+        public delegate CorsairError CorsairReleaseControlDelegate(string deviceId);
+        public delegate CorsairError GetDevicePropertyInfoDelegate(string deviceId, CorsairDevicePropertyId propertyId, uint propertyIndex, out CorsairDataType dataType, out CorsairPropertyFlag propertyFlag);
+        public delegate CorsairError ReadDevicePropertyDelegate(string deviceId, CorsairDevicePropertyId propertyId, uint propertyIndex, nint propertyValue);
+
+        private static CorsairConnectPtrDelegate? _corsairConnectPtr;
+        private static CorsairGetSessionDetailsDelegate? _corsairGetSessionDetails;
+        private static CorsairDisconnectDelegate? _corsairDisconnect;
+        private static CorsairGetDevicesDelegate? _corsairGetDevices;
+        private static CorsairGetDeviceInfoDelegate? _corsairGetDeviceInfo;
+        private static CorsairGetLedPositionsDelegate? _corsairGetLedPositions;
+        private static CorsairSetLedColorsDelegate? _corsairSetLedColors;
+        private static CorsairSetLayerPriorityDelegate? _corsairSetLayerPriority;
+        private static CorsairGetLedLuidForKeyNameDelegate? _corsairGetLedLuidForKeyName;
+        private static CorsairRequestControlDelegate? _corsairRequestControl;
+        private static CorsairReleaseControlDelegate? _corsairReleaseControl;
+        private static GetDevicePropertyInfoDelegate? _getDevicePropertyInfo;
+        private static ReadDevicePropertyDelegate? _readDeviceProperty;
 
         #endregion
 
@@ -200,10 +211,14 @@ namespace RGB.NET.Devices.Corsair.Native
             nint sessionDetailPtr = Marshal.AllocHGlobal(Marshal.SizeOf<_CorsairSessionDetails>());
             try
             {
-                CorsairError error = _corsairGetSessionDetails(sessionDetailPtr);
-                details = Marshal.PtrToStructure<_CorsairSessionDetails>(sessionDetailPtr);
-
-                return error;
+                if (_corsairGetSessionDetails != null)
+                {
+                    CorsairError error = _corsairGetSessionDetails(sessionDetailPtr);
+                    details = Marshal.PtrToStructure<_CorsairSessionDetails>(sessionDetailPtr);
+                    return error;
+                }
+                details = default;
+                return CorsairError.InvalidOperation;
             }
             finally
             {
@@ -214,7 +229,10 @@ namespace RGB.NET.Devices.Corsair.Native
         internal static CorsairError CorsairDisconnect()
         {
             if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _corsairDisconnect();
+            if (_corsairDisconnect != null)
+                return _corsairDisconnect();
+            else
+                return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError CorsairGetDevices(_CorsairDeviceFilter filter, out _CorsairDeviceInfo[] devices)
@@ -225,10 +243,14 @@ namespace RGB.NET.Devices.Corsair.Native
             nint devicePtr = Marshal.AllocHGlobal(structSize * CORSAIR_DEVICE_COUNT_MAX);
             try
             {
-                CorsairError error = _corsairGetDevices(filter, CORSAIR_DEVICE_COUNT_MAX, devicePtr, out int size);
-                devices = devicePtr.ToArray<_CorsairDeviceInfo>(size);
-
-                return error;
+                if (_corsairGetDevices != null)
+                {
+                    CorsairError error = _corsairGetDevices(filter, CORSAIR_DEVICE_COUNT_MAX, devicePtr, out int size);
+                    devices = devicePtr.ToArray<_CorsairDeviceInfo>(size);
+                    return error;
+                }
+                devices = new _CorsairDeviceInfo[0];
+                return CorsairError.InvalidOperation;
             }
             finally
             {
@@ -239,7 +261,9 @@ namespace RGB.NET.Devices.Corsair.Native
         internal static CorsairError CorsairGetDeviceInfo(string deviceId, _CorsairDeviceInfo deviceInfo)
         {
             if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _corsairGetDeviceInfo(deviceId, deviceInfo);
+            if (_corsairGetDeviceInfo != null)
+                return _corsairGetDeviceInfo(deviceId, deviceInfo);
+            return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError CorsairGetLedPositions(string deviceId, out _CorsairLedPosition[] ledPositions)
@@ -250,10 +274,14 @@ namespace RGB.NET.Devices.Corsair.Native
             nint ledPositionsPtr = Marshal.AllocHGlobal(structSize * CORSAIR_DEVICE_LEDCOUNT_MAX);
             try
             {
-                CorsairError error = _corsairGetLedPositions(deviceId, CORSAIR_DEVICE_LEDCOUNT_MAX, ledPositionsPtr, out int size);
-                ledPositions = ledPositionsPtr.ToArray<_CorsairLedPosition>(size);
-
-                return error;
+                if (_corsairGetLedPositions != null)
+                {
+                    CorsairError error = _corsairGetLedPositions(deviceId, CORSAIR_DEVICE_LEDCOUNT_MAX, ledPositionsPtr, out int size);
+                    ledPositions = ledPositionsPtr.ToArray<_CorsairLedPosition>(size);
+                    return error;
+                }
+                ledPositions = new _CorsairLedPosition[0];
+                return CorsairError.InvalidOperation;
             }
             finally
             {
@@ -264,37 +292,54 @@ namespace RGB.NET.Devices.Corsair.Native
         internal static CorsairError CorsairSetLedColors(string deviceId, int ledCount, nint ledColorsPtr)
         {
             if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _corsairSetLedColors(deviceId, ledCount, ledColorsPtr);
+            if (_corsairSetLedColors != null)
+                return _corsairSetLedColors(deviceId, ledCount, ledColorsPtr);
+            return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError CorsairSetLayerPriority(uint priority)
         {
             if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _corsairSetLayerPriority(priority);
+            if (_corsairSetLayerPriority != null)
+                return _corsairSetLayerPriority(priority);
+            return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError CorsairGetLedLuidForKeyName(string deviceId, char keyName, out uint ledId)
         {
-            if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _corsairGetLedLuidForKeyName(deviceId, keyName, out ledId);
+            if (!IsConnected)
+                throw new RGBDeviceException("The Corsair-SDK is not connected.");
+            if (_corsairGetLedLuidForKeyName != null)
+                return _corsairGetLedLuidForKeyName(deviceId, keyName, out ledId);
+
+            ledId = default;
+            return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError CorsairRequestControl(string deviceId, CorsairAccessLevel accessLevel)
         {
             if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _corsairRequestControl(deviceId, accessLevel);
+            if (_corsairRequestControl != null)
+                return _corsairRequestControl(deviceId, accessLevel);
+            return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError CorsairReleaseControl(string deviceId)
         {
             if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _corsairReleaseControl(deviceId);
+            if (_corsairReleaseControl != null)
+                return _corsairReleaseControl.Invoke(deviceId);
+            return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError GetDevicePropertyInfo(string deviceId, CorsairDevicePropertyId propertyId, uint index, out CorsairDataType dataType, out CorsairPropertyFlag flags)
         {
             if (!IsConnected) throw new RGBDeviceException("The Corsair-SDK is not connected.");
-            return _getDevicePropertyInfo(deviceId, propertyId, index, out dataType, out flags);
+            if (_getDevicePropertyInfo != null)
+                return _getDevicePropertyInfo(deviceId, propertyId, index, out dataType, out flags);
+            dataType = default;
+            flags = default;
+            return CorsairError.InvalidOperation;
         }
 
         internal static CorsairError ReadDeviceProperty(string deviceId, CorsairDevicePropertyId propertyId, uint index, out _CorsairProperty? property)
@@ -304,10 +349,14 @@ namespace RGB.NET.Devices.Corsair.Native
             nint propertyPtr = Marshal.AllocHGlobal(Marshal.SizeOf<_CorsairProperty>());
             try
             {
-                CorsairError error = _readDeviceProperty(deviceId, propertyId, index, propertyPtr);
-                property = Marshal.PtrToStructure<_CorsairProperty>(propertyPtr);
-
-                return error;
+                if (_readDeviceProperty != null)
+                {
+                    CorsairError error = _readDeviceProperty(deviceId, propertyId, index, propertyPtr);
+                    property = Marshal.PtrToStructure<_CorsairProperty>(propertyPtr);
+                    return error;
+                }
+                property = default;
+                return CorsairError.InvalidOperation;
             }
             finally
             {
